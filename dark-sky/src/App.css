@@ -1,24 +1,71 @@
 .App {
-  text-align: center;
+	text-align: center;
 }
-
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
-}
-
 .App-header {
-  height: 150px;
-  padding: 20px;
-  color: white;
-  border-bottom: 1px solid black;
+	height: 150px;
+	padding: 20px;
+}
+.App-intro{
+	margin-top: 100px;
 }
 
-.App-intro {
-  font-size: large;
+/*non-falling icons*/
+.big-icon {
+	height: 200px;
 }
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+/*spinning icons*/
+.big-icon.spinning-icon {
+	animation: icon-spin infinite 20s linear;
+}
+@keyframes icon-spin {
+	from { transform: rotate(0deg); }
+	to { transform: rotate(360deg); }
+}
+
+/*falling icons*/
+.confetti {
+	width: 100px;
+	height: 100px;
+	margin-top: -300px;
+	position:relative;
+	animation:confetti 6s;
+	-webkit-animation:confetti 6s;
+	animation-iteration-count: infinite;
+	-moz-animation-iteration-count: infinite;
+	-webkit-animation-iteration-count: infinite;
+	-o-animation-iteration-count: infinite;
+}
+@keyframes confetti {
+	0% {top:-300px;}
+	100% {top:1500px;}
+}
+@-webkit-keyframes confetti {
+	0% {top:-300px;}
+	100% {top:1500px;}
+}
+.confetti1 {
+	margin-left: 250px;	
+	animation-delay:1s;
+	-webkit-animation-delay:1s;
+}
+.confetti2 {
+	margin-left: 800px;
+	animation-delay:1s;
+	-webkit-animation-delay:1s;
+}
+.confetti3 {
+	margin-left: 400px;
+	animation-delay:2s;
+	-webkit-animation-delay:2s;
+}
+.confetti4 {
+	margin-left: 1200px;
+	animation-delay:3s;
+	-webkit-animation-delay:3s;
+}
+.confetti5 {
+	margin-left: 900px;
+	animation-delay:4s;
+	-webkit-animation-delay:4s;
 }
