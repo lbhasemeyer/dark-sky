@@ -21,8 +21,9 @@ class App extends Component {
     this.noscroll = this.noscroll.bind(this);
     this.enter = this.enter.bind(this);
   }
+  //when component mounts, getWeather for the default location (40.016457, -105.285884)
+  //also prevent scroll actions and listen for the enter keypress, which will run getWeather
   componentDidMount() {
-    this.setState({hrefURL: "https://api.darksky.net/forecast/c210d026b6d4c102cdd37bb5df44061f/" + this.state.latitude + "," + this.state.longitude});
     this.getWeather();
     document.addEventListener('scroll', this.noscroll);
     document.addEventListener('keypress', this.enter);    
@@ -39,6 +40,7 @@ class App extends Component {
       this.getWeather();
     }  
   }
+  //this uses jsonp to hit the dark sky API and clear inputs.
   getWeather(){
     var latitude = this.state.latitude;
     var longitude = this.state.longitude;
@@ -62,14 +64,17 @@ class App extends Component {
       document.getElementById('longitude-input').value = "";
     }
   }
+  //when the latitude input changes, update latitude state.
   changeLatitude(event){
     var newValue = (event.target.value === '' || event.target.value < -90 || event.target.value > 90) ? 'Please enter a valid latitude' : parseInt(event.target.value, 10);
     this.setState({latitude: newValue});
   }
+  //when the longitude input changes, update latitude state.
   changeLongitude(event){
     var newValue = (event.target.value === '' || event.target.value < -180 || event.target.value > 180 ) ? 'Please enter a valid longitude' : parseInt(event.target.value, 10);
     this.setState({longitude: newValue});
   }
+  //this function builds an array of div drops when the currentWeather is snow or rain.
   buildDrops(iconSrc){
     var dropArrayToReturn = [];
     for(var i=0; i<5; i++){
@@ -79,6 +84,7 @@ class App extends Component {
     return dropArrayToReturn;
   }
   render() {
+    //based on the currentWeather, set colors and icons for the page.
     var currentWeather = this.state.currentWeather;
     var currentTemperature = this.state.temperature;
     var iconSrc;
@@ -140,6 +146,7 @@ class App extends Component {
         iconSrc = ClearDay;
     }
 
+    //if no icons were added to the dropArray, we want one big icon.
     var weatherIcon;
     if(dropArray.length>0){
       weatherIcon = dropArray;
@@ -148,7 +155,9 @@ class App extends Component {
       weatherIcon = <img src={iconSrc} className={classForIcon} alt="logo"/>;
     }
 
+    //set width of temperature bar based on |temperature|
     var temperature = Math.abs(currentTemperature) + '%';
+    //build the bar - going right for positive temperatures and left for negative temperatures.
     var bar = (currentTemperature>=0) ? 
       (<div style={{width: '50%', float: 'right'}}>
         <div style={{display: 'inline-block'}}>{currentTemperature} °F</div>
@@ -190,5 +199,3 @@ class App extends Component {
 }
 
 export default App;
-
-// <a href={this.state.hrefURL} style={{textDecoration: 'none'}}>Get Weather</a>
