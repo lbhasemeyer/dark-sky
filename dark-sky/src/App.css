@@ -24,47 +24,47 @@
 }
 
 /*falling icons*/
-.confetti {
+.falling {
 	width: 100px;
 	height: 100px;
 	margin-top: -300px;
 	position:relative;
-	animation:confetti 6s;
-	-webkit-animation:confetti 6s;
+	animation:falling 6s;
+	-webkit-animation:falling 6s;
 	animation-iteration-count: infinite;
 	-moz-animation-iteration-count: infinite;
 	-webkit-animation-iteration-count: infinite;
 	-o-animation-iteration-count: infinite;
 }
-@keyframes confetti {
+@keyframes falling {
 	0% {top:-300px;}
 	100% {top:1500px;}
 }
-@-webkit-keyframes confetti {
+@-webkit-keyframes falling {
 	0% {top:-300px;}
 	100% {top:1500px;}
 }
-.confetti1 {
+.falling1 {
 	margin-left: 250px;	
 	animation-delay:1s;
 	-webkit-animation-delay:1s;
 }
-.confetti2 {
+.falling2 {
 	margin-left: 800px;
 	animation-delay:1s;
 	-webkit-animation-delay:1s;
 }
-.confetti3 {
+.falling3 {
 	margin-left: 400px;
 	animation-delay:2s;
 	-webkit-animation-delay:2s;
 }
-.confetti4 {
+.falling4 {
 	margin-left: 1200px;
 	animation-delay:3s;
 	-webkit-animation-delay:3s;
 }
-.confetti5 {
+.falling5 {
 	margin-left: 900px;
 	animation-delay:4s;
 	-webkit-animation-delay:4s;

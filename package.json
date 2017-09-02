@@ -32,8 +32,6 @@
   },
   "dependencies": {
     "jquery": "^3.2.1",
-    "axios": "^0.15.3",
-    "dark-sky-api": "^0.6.21",
     "flux": "^2.0.0"
   }
 }

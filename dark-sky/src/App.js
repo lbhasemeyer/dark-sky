@@ -42,7 +42,7 @@ class App extends Component {
   getWeather(){
     var latitude = this.state.latitude;
     var longitude = this.state.longitude;
-    if(latitude !== 'Please enter a latitude' && longitude !== 'Please enter a longitude'){
+    if(latitude !== 'Please enter a valid latitude' && longitude !== 'Please enter a valid longitude'){
       var that = this;
       var currentWeather;
       var temperature;
@@ -63,17 +63,17 @@ class App extends Component {
     }
   }
   changeLatitude(event){
-    var newValue = (event.target.value === '') ? 'Please enter a latitude' : parseInt(event.target.value, 10);
+    var newValue = (event.target.value === '' || event.target.value < -90 || event.target.value > 90) ? 'Please enter a valid latitude' : parseInt(event.target.value, 10);
     this.setState({latitude: newValue});
   }
   changeLongitude(event){
-    var newValue = (event.target.value === '') ? 'Please enter a longitude' : parseInt(event.target.value, 10);
+    var newValue = (event.target.value === '' || event.target.value < -180 || event.target.value > 180 ) ? 'Please enter a valid longitude' : parseInt(event.target.value, 10);
     this.setState({longitude: newValue});
   }
   buildDrops(iconSrc){
     var dropArrayToReturn = [];
     for(var i=0; i<5; i++){
-      var classForDrop = 'confetti confetti' + i;
+      var classForDrop = 'falling falling' + i;
       dropArrayToReturn.push(<div key={i} className={classForDrop}><img src={iconSrc} className="falling-icon" alt="logo"/></div>);
     }
     return dropArrayToReturn;
@@ -150,12 +150,12 @@ class App extends Component {
 
     var temperature = Math.abs(currentTemperature) + '%';
     var bar = (currentTemperature>=0) ? 
-      (<div style={{width: '48%', float: 'right'}}>
+      (<div style={{width: '50%', float: 'right'}}>
         <div style={{display: 'inline-block'}}>{currentTemperature} °F</div>
           <div style={{width: temperature, height: 20, backgroundColor: lightColor, float: 'left'}}>
           </div>
         </div>) : 
-      (<div style={{width: '48%', float: 'left'}}>
+      (<div style={{width: '50%', float: 'left'}}>
         <div style={{display: 'inline-block'}}>{currentTemperature} °F</div>
           <div style={{width: temperature, height: 20, backgroundColor: darkColor, float: 'right'}}>
           </div>
@@ -169,11 +169,11 @@ class App extends Component {
       <div className="App">
         <div className="App-header">
           <span>
-            <input id="latitude-input" style={{outline: 'none', border: '1px solid ' + lightColor, borderRadius: '4px', height: '30px', paddingLeft: 10, paddingRight: 10}} type="number" onChange={this.changeLatitude} />
+            <input id="latitude-input" style={{outline: 'none', border: '1px solid ' + lightColor, borderRadius: '4px', height: '30px', paddingLeft: 10, paddingRight: 10}} type="number" min="-90" max="90" onChange={this.changeLatitude} />
             <div style={{color: darkColor}}>{this.state.latitude}</div>
           </span>
           <span>
-            <input id="longitude-input" style={{outline: 'none', border: '1px solid ' + lightColor, borderRadius: '4px', height: '30px', paddingLeft: 10, paddingRight: 10}} type="number" onChange={this.changeLongitude} />
+            <input id="longitude-input" style={{outline: 'none', border: '1px solid ' + lightColor, borderRadius: '4px', height: '30px', paddingLeft: 10, paddingRight: 10}} type="number" min="-180" max="180" onChange={this.changeLongitude} />
             <div style={{color: darkColor}}>{this.state.longitude}</div>
           </span>
           <button style={{outline: 'none', border: '2px solid ' + darkColor, color: darkColor, borderRadius: '4px', height: '38px', paddingLeft: 10, paddingRight: 10, fontSize: '20px', width: 150, marginTop: 17, backgroundColor: 'white'}} onClick={this.getWeather}>
