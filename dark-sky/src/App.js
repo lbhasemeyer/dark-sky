@@ -14,7 +14,7 @@ var jQuery = require("jquery");
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {latitude: 40.016457, longitude: -105.285884, hrefURL: null, currentWeather: null, temperature: null, moreOpen: false};
+    this.state = {latitude: 40.016457, longitude: -105.285884, currentWeather: null, temperature: null};
     this.getWeather = this.getWeather.bind(this);
     this.changeLatitude = this.changeLatitude.bind(this);
     this.changeLongitude = this.changeLongitude.bind(this);
@@ -50,9 +50,10 @@ class App extends Component {
       var temperature;
       jQuery(document).ready(function($) {
           $.ajax({                    
-            url : "https://api.darksky.net/forecast/c210d026b6d4c102cdd37bb5df44061f/" + latitude + "," + longitude,
+            url : "https://api.darksky.net/forecast/c210d026b6d4c102cdd37bb5df44061f/" + latitude + "," + longitude + '?exclude=daily, flags, hourly, minutely',
             dataType : "jsonp",
             success : function(response) {
+              console.log(response);
               var currentConditions = response.currently;
               currentWeather = currentConditions.icon;
               temperature = currentConditions.temperature;
@@ -117,29 +118,32 @@ class App extends Component {
       case 'sleet':
         iconSrc = Rain;
         lightColor = "#ADD8E6";
-        darkColor = "blue";
+        darkColor = "#4d4d4d";
         dropArray = this.buildDrops(iconSrc);
         break;
       case 'wind':
-        //make words blow off page
         iconSrc = Wind;
-        lightColor = "pink";
-        darkColor = "purple";
+        lightColor = "#BA55D3";
+        darkColor = "#AA00FF";
         break;
       case 'fog':
         iconSrc = Foggy;
         lightColor = "#b5651d";
-        darkColor = "brown";
+        darkColor = "#654321";
         break;
       case 'cloudy':
+        lightColor = '#B4CDCD';
+        darkColor = '#528B8B';       
         iconSrc = Cloudy;
         break;
       case 'partly-cloudy-day':
+        lightColor = '#00EEEE';
+        darkColor = '#7A8B8B';    
         iconSrc = CloudyDay;
         break;
       case 'partly-cloudy-night':
-        lightColor = 'blue';
-        darkColor = "#003366";
+        lightColor = '#003366';
+        darkColor = "black";
         iconSrc = CloudyNight;
         break;
       default:
@@ -164,7 +168,7 @@ class App extends Component {
       bar = 
         (<div style={{width: '50%', float: (currentTemperature>0) ? 'right' : 'left'}}>
           <div style={{width: temperature, height: 20, backgroundColor: lightColor, float: (currentTemperature>0) ? 'left' : 'right'}} />
-          <div style={{display: 'inline-block', fontSize: 20, float: (currentTemperature>0) ? 'left' : 'right', paddingLeft: 5, paddingRight: 5}}>
+          <div style={{display: 'inline-block', fontSize: 20, float: (currentTemperature>0) ? 'left' : 'right', paddingLeft: 5, paddingRight: 5, color: darkColor}}>
             {currentTemperature} °F
           </div> 
         </div>)
@@ -173,9 +177,9 @@ class App extends Component {
     }
     var temperatureBar = 
       <div style={{width: '100%', height: 20, position: 'absolute', bottom: 0}}>
-        <div style={{position: 'absolute', left: '48%', bottom: 20, lineHeight: '25px', fontSize: 20}}>-</div>
+        <div style={{position: 'absolute', left: '48%', bottom: 20, lineHeight: '25px', fontSize: 20, color: darkColor}}>-</div>
         {bar}
-        <div style={{position: 'absolute', left: '52%', bottom: 20, lineHeight: '25px', fontSize: 20}}>+</div>
+        <div style={{position: 'absolute', left: '52%', bottom: 20, lineHeight: '25px', fontSize: 20, color: darkColor}}>+</div>
       </div>;
 
     return (
@@ -196,7 +200,7 @@ class App extends Component {
         <p className="App-intro">
           {weatherIcon}
         </p>
-        <div style={{position: 'absolute', left: '50%', bottom: 0, width: 2, height: 40, backgroundColor: 'black'}} />
+        <div style={{position: 'absolute', left: '50%', bottom: 0, width: 2, height: 40, backgroundColor: darkColor}} />
         {temperatureBar}
       </div>
     );
