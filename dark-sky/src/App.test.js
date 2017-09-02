@@ -11,26 +11,48 @@ it('renders without crashing', () => {
 });
 
 it('has props on initial render', () => {
- 	var component = shallow(<App />);
 	jQuery(document).ready(function() {
-	  expect(component.prop('latitude')).toEqual(40.016457);
-	  expect(component.prop('longitude')).toEqual(-105.285884);
-	  expect(component.prop('currentWeather')).toEqual(null);
-	  expect(component.prop('temperature')).toEqual(null);
+		var component = shallow(<App />);
+		expect(component.prop('latitude')).toEqual(40.016457);
+		expect(component.prop('longitude')).toEqual(-105.285884);
+		expect(component.prop('currentWeather')).toEqual(null);
+		expect(component.prop('temperature')).toEqual(null);
 	});
 });
 
 it('should react to an input change', () => {
-	var component = shallow(<App />);
-	component.find('input#latitude-input').simulate('change', { target: {
-		value: '9' }
-	});
-	component.find('input#longitude-input').simulate('change', { target: {
-		value: '90' }
-	});	
 	jQuery(document).ready(function() {
+		var component = shallow(<App />);
+		component.find('input#latitude-input').simulate('change', { target: {
+			value: '9' }
+		});
+		component.find('input#longitude-input').simulate('change', { target: {
+			value: '90' }
+		});	
 		expect(component.prop('latitude')).toEqual(9);
 		expect(component.prop('longitude')).toEqual(90);
+	});
+});
+
+it('should clear input on button push', () => {
+	jQuery(document).ready(function() {
+		var component = shallow(<App />);
+		component.find('input#latitude-input').simulate('change', { target: {
+			value: '19' }
+		});
+		component.find('button#get-weather-button').simulate('click');
+		var latitudeInput = component.find('input#latitude-input');
+		expect(latitudeInput).value.toEqual('');
+		expect(component.prop('latitude')).toEqual(19);
+	});
+});
+
+it('should react to the button push', () => {
+	jQuery(document).ready(function() {
+		var component = shallow(<App />);
+		component.find('button#get-weather-button').simulate('click');
+		expect(component.prop('currentWeather')).not.toEqual(null);
+		expect(component.prop('temperature')).not.toEqual(null);
 	});
 });
 
