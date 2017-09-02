@@ -14,7 +14,7 @@ var jQuery = require("jquery");
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {latitude: 40.016457, longitude: -105.285884, hrefURL: null, currentWeather: null, temperature: null};
+    this.state = {latitude: 40.016457, longitude: -105.285884, hrefURL: null, currentWeather: null, temperature: null, moreOpen: false};
     this.getWeather = this.getWeather.bind(this);
     this.changeLatitude = this.changeLatitude.bind(this);
     this.changeLongitude = this.changeLongitude.bind(this);
@@ -156,34 +156,38 @@ class App extends Component {
     }
 
     //set width of temperature bar based on |temperature|
-    var temperature = Math.abs(currentTemperature) + '%';
+    var temperature = Math.abs(currentTemperature)*.6 + '%';
     //build the bar - going right for positive temperatures and left for negative temperatures.
-    var bar = (currentTemperature>=0) ? 
-      (<div style={{width: '50%', float: 'right'}}>
-        <div style={{display: 'inline-block'}}>{currentTemperature} °F</div>
-          <div style={{width: temperature, height: 20, backgroundColor: lightColor, float: 'left'}}>
-          </div>
-        </div>) : 
-      (<div style={{width: '50%', float: 'left'}}>
-        <div style={{display: 'inline-block'}}>{currentTemperature} °F</div>
-          <div style={{width: temperature, height: 20, backgroundColor: darkColor, float: 'right'}}>
-          </div>
-        </div>);
+    var bar;
+    var positiveOrNegativeSign = (currentTemperature >= 0) ? '+' : '-';
+    if(currentTemperature!==0){
+      bar = 
+        (<div style={{width: '50%', float: (currentTemperature>0) ? 'right' : 'left'}}>
+          <div style={{width: temperature, height: 20, backgroundColor: lightColor, float: (currentTemperature>0) ? 'left' : 'right'}} />
+          <div style={{display: 'inline-block', fontSize: 20, float: (currentTemperature>0) ? 'left' : 'right', paddingLeft: 5, paddingRight: 5}}>
+            {currentTemperature} °F
+          </div> 
+        </div>)
+    } else {
+      bar = (<div style={{display: 'inline-block'}}>{positiveOrNegativeSign}{currentTemperature} °F</div>);
+    }
     var temperatureBar = 
       <div style={{width: '100%', height: 20, position: 'absolute', bottom: 0}}>
+        <div style={{position: 'absolute', left: '48%', bottom: 20, lineHeight: '25px', fontSize: 20}}>-</div>
         {bar}
+        <div style={{position: 'absolute', left: '52%', bottom: 20, lineHeight: '25px', fontSize: 20}}>+</div>
       </div>;
 
     return (
       <div className="App">
         <div className="App-header">
           <span>
-            <input id="latitude-input" style={{outline: 'none', border: '1px solid ' + lightColor, borderRadius: '4px', height: '30px', paddingLeft: 10, paddingRight: 10}} type="number" min="-90" max="90" onChange={this.changeLatitude} />
-            <div style={{color: darkColor}}>{this.state.latitude}</div>
+            <input id="latitude-input" style={{outline: 'none', width: 130, border: '1px solid ' + lightColor, borderRadius: '4px', height: '30px', paddingLeft: 10, paddingRight: 10}} type="number" min="-90" max="90" onChange={this.changeLatitude} />
+            <div style={{color: darkColor, fontSize: 18}}>{this.state.latitude}</div>
           </span>
           <span>
-            <input id="longitude-input" style={{outline: 'none', border: '1px solid ' + lightColor, borderRadius: '4px', height: '30px', paddingLeft: 10, paddingRight: 10}} type="number" min="-180" max="180" onChange={this.changeLongitude} />
-            <div style={{color: darkColor}}>{this.state.longitude}</div>
+            <input id="longitude-input" style={{outline: 'none', width: 130, border: '1px solid ' + lightColor, borderRadius: '4px', height: '30px', paddingLeft: 10, paddingRight: 10}} type="number" min="-180" max="180" onChange={this.changeLongitude} />
+            <div style={{color: darkColor, fontSize: 18}}>{this.state.longitude}</div>
           </span>
           <button style={{outline: 'none', border: '2px solid ' + darkColor, color: darkColor, borderRadius: '4px', height: '38px', paddingLeft: 10, paddingRight: 10, fontSize: '20px', width: 150, marginTop: 17, backgroundColor: 'white'}} onClick={this.getWeather}>
             Get Weather
@@ -192,6 +196,7 @@ class App extends Component {
         <p className="App-intro">
           {weatherIcon}
         </p>
+        <div style={{position: 'absolute', left: '50%', bottom: 0, width: 2, height: 40, backgroundColor: 'black'}} />
         {temperatureBar}
       </div>
     );
