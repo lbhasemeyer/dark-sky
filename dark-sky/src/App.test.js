@@ -20,7 +20,7 @@ it('has props on initial render', () => {
 	});
 });
 
-it('should react to an input change', () => {
+it('reacts to input changes', () => {
 	jQuery(document).ready(function() {
 		var component = shallow(<App />);
 		component.find('input#latitude-input').simulate('change', { target: {
@@ -34,7 +34,7 @@ it('should react to an input change', () => {
 	});
 });
 
-it('should clear input on button push', () => {
+it('clears input and maintains/gets new state values on button push', () => {
 	jQuery(document).ready(function() {
 		var component = shallow(<App />);
 		component.find('input#latitude-input').simulate('change', { target: {
@@ -44,32 +44,23 @@ it('should clear input on button push', () => {
 		var latitudeInput = component.find('input#latitude-input');
 		expect(latitudeInput).value.toEqual('');
 		expect(component.prop('latitude')).toEqual(19);
+		expect(component.prop('currentWeather')).not.toEqual(null);
+		expect(component.prop('temperature')).not.toEqual(null);	
+		expect(getWeather.called).to.be.true;		
 	});
 });
 
-it('should react to the button push', () => {
+it('fires getWeather only on only enter keydown', () => {
 	jQuery(document).ready(function() {
 		var component = shallow(<App />);
-		component.find('button#get-weather-button').simulate('click');
-		expect(component.prop('currentWeather')).not.toEqual(null);
-		expect(component.prop('temperature')).not.toEqual(null);
+		var latitudeInput = component.find('input#latitude-input');
+		latitudeInput.simulate('change', { target: {
+			value: '19' }
+		});
+		latitudeInput.simulate('keyDown', {keyCode: 13});
+		expect(getWeather.called).to.be.true;	
+
+		latitudeInput.simulate('keyDown', {keyCode: 40});
+		expect(getWeather.called).to.be.false;	
 	});
 });
-
-// describe('Addition', () => {
-//   it('knows that 2 and 2 make 4', () => {
-//     expect(2 + 2).toBe(4);
-//   });
-// });
-
-// it('gets weather using getWeather', () => {
-// 	const startState = {
-// 	  appState: [{latitude: 40.016457, longitude: -105.285884, currentWeather: null, temperature: null}]
-// 	};
-
-// 	const finState = getWeather();
-
-// 	expect(finState.appState).toEqual([
-// 	  {latitude: 40.016457, longitude: -105.285884, currentWeather: null, temperature: null}
-// 	]);
-// });
