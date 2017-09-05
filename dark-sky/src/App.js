@@ -28,6 +28,7 @@ class App extends Component {
     document.addEventListener('scroll', this._preventScroll);
     document.addEventListener('keypress', this._enterKeyHit);    
   }
+  //remove event listeners before component is destroyed
   componentWillUnmount() {
     document.removeEventListener('scroll', this._preventScroll);
     document.removeEventListener('keypress', this._enterKeyHit);
@@ -35,6 +36,7 @@ class App extends Component {
   _preventScroll() {
     window.scrollTo( 0, 0 );
   }
+  //if the enter key is hit, get weather again.
   _enterKeyHit(target){
     if (target.charCode === 13) {
       this._getWeather();
@@ -154,7 +156,7 @@ class App extends Component {
         iconSrc = null;
     }
 
-    //if no icons were added to the dropArray, we want one big icon.
+    //if no icons were added to the dropArray, we want one big icon to show.  adding spin and slide action classes.
     var weatherIcon;
     if(dropArray.length>0){
       weatherIcon = dropArray;
