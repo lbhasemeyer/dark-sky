@@ -5,12 +5,9 @@
 	height: 150px;
 	padding: 20px;
 }
-.App-intro{
-	margin-top: 100px;
-}
 
-/*non-falling icons*/
 .big-icon {
+	margin-top: 100px;
 	height: 200px;
 }
 
@@ -68,4 +65,23 @@
 	margin-left: 900px;
 	animation-delay:4s;
 	-webkit-animation-delay:4s;
+}
+
+/*sliding icons*/
+.big-icon.sliding-icon {
+	position:relative;
+	animation:blowing 6s;
+	-webkit-animation:blowing 6s;
+	animation-iteration-count: infinite;
+	-moz-animation-iteration-count: infinite;
+	-webkit-animation-iteration-count: infinite;
+	-o-animation-iteration-count: infinite;
+}
+@keyframes blowing {
+	0% {left: 700px;}
+	100% {left: -750px;}
+}
+@-webkit-keyframes blowing {
+	0% {left: 700px;}
+	100% {left: -750px;}
 }

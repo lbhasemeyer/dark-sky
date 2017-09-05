@@ -9,7 +9,7 @@ import Foggy from './icons/foggy.svg';
 import CloudyNight from './icons/cloudyNight.svg';
 import CloudyDay from './icons/cloudyDay.svg';
 import './App.css';
-var jQuery = require("jquery");
+var jQuery = require('jquery');
 
 class App extends Component {
   constructor(props) {
@@ -80,7 +80,7 @@ class App extends Component {
     var dropArrayToReturn = [];
     for(var i=0; i<5; i++){
       var classForDrop = 'falling falling' + i;
-      dropArrayToReturn.push(<div key={i} className={classForDrop}><img src={iconSrc} className="falling-icon" alt="logo"/></div>);
+      dropArrayToReturn.push(<div key={i} className={classForDrop}><img src={iconSrc} className="falling-icon" /></div>);
     }
     return dropArrayToReturn;
   }
@@ -91,8 +91,9 @@ class App extends Component {
     var iconSrc;
     var dropArray = [];
     var spin = false;
-    var lightColor = "orange";
-    var darkColor = "red";
+    var slideOut = false;
+    var lightColor;
+    var darkColor;
     switch(currentWeather) {
       case 'clear-day':
         iconSrc = ClearDay;
@@ -125,6 +126,7 @@ class App extends Component {
         iconSrc = Wind;
         lightColor = "#BA55D3";
         darkColor = "#AA00FF";
+        slideOut = true;
         break;
       case 'fog':
         iconSrc = Foggy;
@@ -147,7 +149,7 @@ class App extends Component {
         iconSrc = CloudyNight;
         break;
       default:
-        iconSrc = ClearDay;
+        iconSrc = null;
     }
 
     //if no icons were added to the dropArray, we want one big icon.
@@ -155,8 +157,11 @@ class App extends Component {
     if(dropArray.length>0){
       weatherIcon = dropArray;
     } else {
-      var classForIcon = (spin === true) ? "big-icon spinning-icon" : "big-icon";
-      weatherIcon = <img src={iconSrc} className={classForIcon} alt="logo"/>;
+      var classForIcon = (spin === true) ? 'big-icon spinning-icon' : 'big-icon';
+      if(slideOut === true){
+        classForIcon += ' sliding-icon';
+      }
+      weatherIcon = <img src={iconSrc} className={classForIcon} />;
     }
 
     //set width of temperature bar based on |temperature|
@@ -197,9 +202,9 @@ class App extends Component {
             Get Weather
           </button>
         </div>
-        <p className="App-intro">
+        <div className="App-intro">
           {weatherIcon}
-        </p>
+        </div>
         <div style={{position: 'absolute', left: '50%', bottom: 0, width: 2, height: 40, backgroundColor: darkColor}} />
         {temperatureBar}
       </div>
