@@ -14,12 +14,14 @@ var jQuery = require('jquery');
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {latitude: 40.016457, longitude: -105.285884, currentWeather: null, temperature: null};
+    this.state = {latitude: 40.016457, longitude: -105.285884, currentWeather: null, temperature: null, mouseHoveredActiveButton: false};
     this._getWeather = this._getWeather.bind(this);
     this._changeLatitude = this._changeLatitude.bind(this);
     this._changeLongitude = this._changeLongitude.bind(this);
     this._preventScroll = this._preventScroll.bind(this);
     this._enterKeyHit = this._enterKeyHit.bind(this);
+    this._mouseEnterButton = this._mouseEnterButton.bind(this);
+    this._mouseLeaveButton = this._mouseLeaveButton.bind(this);
   }
   //when component mounts, _getWeather for the default location (40.016457, -105.285884)
   //also prevent scroll actions and listen for the enter keypress, which will run _getWeather
@@ -52,10 +54,9 @@ class App extends Component {
       var temperature;
       jQuery(document).ready(function($) {
           $.ajax({                    
-            url : "https://api.darksky.net/forecast/c210d026b6d4c102cdd37bb5df44061f/" + latitude + "," + longitude + '?exclude=daily, flags, hourly, minutely',
+            url : "https://api.darksky.net/forecast/c210d026b6d4c102cdd37bb5df44061f/" + latitude + "," + longitude + "?exclude=daily, flags, hourly, minutely",
             dataType : "jsonp",
             success : function(response) {
-              console.log(response);
               var currentConditions = response.currently;
               currentWeather = currentConditions.icon;
               temperature = currentConditions.temperature;
@@ -63,8 +64,8 @@ class App extends Component {
             }
           });
       });
-      document.getElementById('latitude-input').value = "";
-      document.getElementById('longitude-input').value = "";
+      document.getElementById('latitude-input').value = '';
+      document.getElementById('longitude-input').value = '';
     }
   }
   //when the latitude input changes, update latitude state.
@@ -78,13 +79,21 @@ class App extends Component {
     this.setState({longitude: newValue});
   }
   //this function builds an array of div drops when the currentWeather is snow or rain.
-  buildDrops(iconSrc){
+  _buildDrops(iconSrc){
     var dropArrayToReturn = [];
     for(var i=0; i<5; i++){
       var classForDrop = 'falling falling' + i;
-      dropArrayToReturn.push(<div key={i} className={classForDrop}><img src={iconSrc} className="falling-icon" /></div>);
+      dropArrayToReturn.push(<div key={i} className={classForDrop}><img src={iconSrc} className='falling-icon' alt='' /></div>);
     }
     return dropArrayToReturn;
+  }
+  _mouseEnterButton(){
+    if(this.state.latitude !== 'Please enter a valid latitude' && this.state.longitude !== 'Please enter a valid longitude'){
+      this.setState({mouseHoveredActiveButton: true});
+    }
+  }
+  _mouseLeaveButton(){
+    this.setState({mouseHoveredActiveButton: false});
   }
   render() {
     //based on the currentWeather, set colors and icons for the page.
@@ -99,43 +108,43 @@ class App extends Component {
     switch(currentWeather) {
       case 'clear-day':
         iconSrc = ClearDay;
-        var lightColor = "orange";
-        var darkColor = "red";
+        lightColor = 'orange';
+        darkColor = 'red';
         spin = true;
         break;
       case 'clear-night':
         iconSrc = ClearNight;
-        lightColor = "blue";
-        darkColor = "black";
+        lightColor = 'blue';
+        darkColor = 'black';
         break;
       case 'rain':
         iconSrc = Rain;
-        lightColor = "#ADD8E6";
-        darkColor = "blue";
-        dropArray = this.buildDrops(iconSrc);
+        lightColor = '#ADD8E6';
+        darkColor = 'blue';
+        dropArray = this._buildDrops(iconSrc);
         break;
       case 'snow':
         iconSrc = Snow;
-        lightColor = "lightgrey";
-        darkColor = "gray";
-        dropArray = this.buildDrops(iconSrc);
+        lightColor = 'lightgrey';
+        darkColor = 'gray';
+        dropArray = this._buildDrops(iconSrc);
         break;
       case 'sleet':
         iconSrc = Rain;
-        lightColor = "#ADD8E6";
-        darkColor = "#4d4d4d";
-        dropArray = this.buildDrops(iconSrc);
+        lightColor = '#ADD8E6';
+        darkColor = '#4d4d4d';
+        dropArray = this._buildDrops(iconSrc);
         break;
       case 'wind':
         iconSrc = Wind;
-        lightColor = "#BA55D3";
-        darkColor = "#AA00FF";
+        lightColor = '#BA55D3';
+        darkColor = '#AA00FF';
         slideOut = true;
         break;
       case 'fog':
         iconSrc = Foggy;
-        lightColor = "#b5651d";
-        darkColor = "#654321";
+        lightColor = '#b5651d';
+        darkColor = '#654321';
         break;
       case 'cloudy':
         lightColor = '#B4CDCD';
@@ -149,10 +158,12 @@ class App extends Component {
         break;
       case 'partly-cloudy-night':
         lightColor = '#003366';
-        darkColor = "black";
+        darkColor = 'black';
         iconSrc = CloudyNight;
         break;
       default:
+        lightColor = 'white';
+        darkColor = 'white';
         iconSrc = null;
     }
 
@@ -165,7 +176,7 @@ class App extends Component {
       if(slideOut === true){
         classForIcon += ' sliding-icon';
       }
-      weatherIcon = <img src={iconSrc} className={classForIcon} />;
+      weatherIcon = <img src={iconSrc} className={classForIcon} alt='' />;
     }
 
     //set width of temperature bar based on |temperature|.  multiplying by .6 so temperatures up to 140F will comfortably fit on the fullscreen.
@@ -177,7 +188,7 @@ class App extends Component {
     if(currentTemperature!==0){
       bar = 
         (<div style={{width: '50%', float: (currentTemperature>0) ? 'right' : 'left'}}>
-          <div style={{width: temperature, height: 20, backgroundColor: lightColor, float: (currentTemperature>0) ? 'left' : 'right'}} />
+          <div style={{width: temperature, height: '5vh', minHeight: 20, backgroundColor: lightColor, float: (currentTemperature>0) ? 'left' : 'right'}} />
           <div style={{display: 'inline-block', fontSize: 20, float: (currentTemperature>0) ? 'left' : 'right', paddingLeft: 5, paddingRight: 5, color: darkColor}}>
             {currentTemperatureFarenheit}
           </div> 
@@ -186,31 +197,35 @@ class App extends Component {
       bar = (<div style={{display: 'inline-block'}}>{positiveOrNegativeSign}{currentTemperature} °F</div>);
     }
     var temperatureBar = 
-      <div style={{width: '100%', height: 20, position: 'absolute', bottom: 0}}>
-        <div style={{position: 'absolute', left: '48%', bottom: 20, lineHeight: '25px', fontSize: 20, color: darkColor}}>-</div>
+      <div style={{width: '100%', height: '5vh', minHeight: 20, position: 'absolute', bottom: 0}}>
+        <div style={{position: 'absolute', left: '48%', bottom: 'calc(20px + 2vh)', lineHeight: '25px', fontSize: 20, color: darkColor}}>-</div>
         {bar}
-        <div style={{position: 'absolute', left: '52%', bottom: 20, lineHeight: '25px', fontSize: 20, color: darkColor}}>+</div>
+        <div style={{position: 'absolute', left: '52%', bottom: 'calc(20px + 2vh)', lineHeight: '25px', fontSize: 20, color: darkColor}}>+</div>
       </div>;
 
+    //build the button style - cursor and color  
+    var buttonCursor = (this.state.latitude === 'Please enter a valid latitude' || this.state.longitude === 'Please enter a valid longitude') ? 'not-allowed' : 'pointer';
+    var buttonColor = (this.state.mouseHoveredActiveButton === true) ? lightColor : 'white';
+
     return (
-      <div className="App">
-        <div className="App-header">
+      <div className='App'>
+        <div className='App-header'>
           <span>
-            <input id="latitude-input" style={{outline: 'none', width: 130, border: '1px solid ' + lightColor, borderRadius: '4px', height: '30px', paddingLeft: 10, paddingRight: 10}} type="number" min="-90" max="90" onChange={this._changeLatitude} />
+            <input id='latitude-input' style={{outline: 'none', width: 130, border: '1px solid ' + lightColor, borderRadius: '4px', height: '30px', paddingLeft: 10, paddingRight: 10}} type='number' min='-90' max='90' onChange={this._changeLatitude} />
             <div style={{color: darkColor, fontSize: 18}}>{this.state.latitude}</div>
           </span>
           <span>
-            <input id="longitude-input" style={{outline: 'none', width: 130, border: '1px solid ' + lightColor, borderRadius: '4px', height: '30px', paddingLeft: 10, paddingRight: 10}} type="number" min="-180" max="180" onChange={this._changeLongitude} />
+            <input id='longitude-input' style={{outline: 'none', width: 130, border: '1px solid ' + lightColor, borderRadius: '4px', height: '30px', paddingLeft: 10, paddingRight: 10}} type='number' min='-180' max='180' onChange={this._changeLongitude} />
             <div style={{color: darkColor, fontSize: 18}}>{this.state.longitude}</div>
           </span>
-          <button id="get-weather-button" style={{outline: 'none', border: '2px solid ' + darkColor, color: darkColor, borderRadius: '4px', height: '38px', paddingLeft: 10, paddingRight: 10, fontSize: '20px', width: 150, marginTop: 17, backgroundColor: 'white'}} onClick={this._getWeather}>
+          <button id='get-weather-button' style={{cursor: buttonCursor, backgroundColor: buttonColor, outline: 'none', border: '2px solid ' + darkColor, color: darkColor, borderRadius: '4px', height: '38px', paddingLeft: 10, paddingRight: 10, fontSize: '20px', width: 150, marginTop: 17}} onClick={this._getWeather} onMouseEnter={this._mouseEnterButton} onMouseLeave={this._mouseLeaveButton} onMouseUp={this._mouseLeaveButton} onMouseDown={this._mouseEnterButton}>
             Get Weather
           </button>
         </div>
-        <div className="App-intro">
+        <div className='App-intro'>
           {weatherIcon}
         </div>
-        <div style={{position: 'absolute', left: '50%', bottom: 0, width: 2, height: 40, backgroundColor: darkColor}} />
+        <div style={{position: 'absolute', left: '50%', bottom: 0, width: 2, height: '10vh', minHeight: 40,backgroundColor: darkColor}} />
         {temperatureBar}
       </div>
     );

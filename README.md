@@ -1,6 +1,6 @@
 This was built using https://github.com/facebookincubator/create-react-app and free icons from Weathery: https://www.iconfinder.com/iconsets/weathery
 
-After downloading the repo, cd into the folder dark-sky from command line.
+Download the repo
 
 npm install
 
