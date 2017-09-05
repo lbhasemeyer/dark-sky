@@ -9,24 +9,25 @@ import Foggy from './icons/foggy.svg';
 import CloudyNight from './icons/cloudyNight.svg';
 import CloudyDay from './icons/cloudyDay.svg';
 import './App.css';
+import Thermometer from './components/thermometer.react.js';
+import WeatherButton from './components/weather.button.react.js';
+import LatitudeLongitudeInputs from './components/latitude.longitude.inputs.react.js';
 var jQuery = require('jquery');
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {latitude: 40.016457, longitude: -105.285884, currentWeather: null, temperature: null, mouseHoveredActiveButton: false};
-    this._getWeather = this._getWeather.bind(this);
-    this._changeLatitude = this._changeLatitude.bind(this);
-    this._changeLongitude = this._changeLongitude.bind(this);
+    this.state = {latitude: 40.016457, longitude: -105.285884, currentWeather: null, temperature: null};
+    this.getWeather = this.getWeather.bind(this);
+    this.changeLatitude = this.changeLatitude.bind(this);
+    this.changeLongitude = this.changeLongitude.bind(this);
     this._preventScroll = this._preventScroll.bind(this);
     this._enterKeyHit = this._enterKeyHit.bind(this);
-    this._mouseEnterButton = this._mouseEnterButton.bind(this);
-    this._mouseLeaveButton = this._mouseLeaveButton.bind(this);
   }
-  //when component mounts, _getWeather for the default location (40.016457, -105.285884)
-  //also prevent scroll actions and listen for the enter keypress, which will run _getWeather
+  //when component mounts, getWeather for the default location (40.016457, -105.285884)
+  //also prevent scroll actions and listen for the enter keypress, which will run getWeather
   componentDidMount() {
-    this._getWeather();
+    this.getWeather();
     document.addEventListener('scroll', this._preventScroll);
     document.addEventListener('keypress', this._enterKeyHit);    
   }
@@ -41,11 +42,11 @@ class App extends Component {
   //if the enter key is hit, get weather again.
   _enterKeyHit(target){
     if (target.charCode === 13) {
-      this._getWeather();
+      this.getWeather();
     }  
   }
   //this uses jsonp to hit the dark sky API and clear inputs.
-  _getWeather(){
+  getWeather(){
     var latitude = this.state.latitude;
     var longitude = this.state.longitude;
     if(latitude !== 'Please enter a valid latitude' && longitude !== 'Please enter a valid longitude'){
@@ -69,13 +70,11 @@ class App extends Component {
     }
   }
   //when the latitude input changes, update latitude state.
-  _changeLatitude(event){
-    var newValue = (event.target.value === '' || event.target.value < -90 || event.target.value > 90) ? 'Please enter a valid latitude' : parseInt(event.target.value, 10);
+  changeLatitude(newValue){
     this.setState({latitude: newValue});
   }
   //when the longitude input changes, update latitude state.
-  _changeLongitude(event){
-    var newValue = (event.target.value === '' || event.target.value < -180 || event.target.value > 180 ) ? 'Please enter a valid longitude' : parseInt(event.target.value, 10);
+  changeLongitude(newValue){
     this.setState({longitude: newValue});
   }
   //this function builds an array of div drops when the currentWeather is snow or rain.
@@ -87,24 +86,16 @@ class App extends Component {
     }
     return dropArrayToReturn;
   }
-  _mouseEnterButton(){
-    if(this.state.latitude !== 'Please enter a valid latitude' && this.state.longitude !== 'Please enter a valid longitude'){
-      this.setState({mouseHoveredActiveButton: true});
-    }
-  }
-  _mouseLeaveButton(){
-    this.setState({mouseHoveredActiveButton: false});
-  }
   render() {
     //based on the currentWeather, set colors and icons for the page.
     var currentWeather = this.state.currentWeather;
     var currentTemperature = this.state.temperature;
+    var lightColor;
+    var darkColor;
     var iconSrc;
     var dropArray = [];
     var spin = false;
     var slideOut = false;
-    var lightColor;
-    var darkColor;
     switch(currentWeather) {
       case 'clear-day':
         iconSrc = ClearDay;
@@ -166,7 +157,6 @@ class App extends Component {
         darkColor = 'white';
         iconSrc = null;
     }
-
     //if no icons were added to the dropArray, we want one big icon to show.  adding spin and slide action classes.
     var weatherIcon;
     if(dropArray.length>0){
@@ -179,54 +169,21 @@ class App extends Component {
       weatherIcon = <img src={iconSrc} className={classForIcon} alt='' />;
     }
 
-    //set width of temperature bar based on |temperature|.  multiplying by .6 so temperatures up to 140F will comfortably fit on the fullscreen.
-    var temperature = Math.abs(currentTemperature)*.6 + '%';
-    //build the bar - going right for positive temperatures and left for negative temperatures.
-    var bar;
-    var positiveOrNegativeSign = (currentTemperature >= 0) ? '+' : '-';
-    var currentTemperatureFarenheit = (currentTemperature !== null) ? currentTemperature + '°F' : '';
-    if(currentTemperature!==0){
-      bar = 
-        (<div style={{width: '50%', float: (currentTemperature>0) ? 'right' : 'left'}}>
-          <div style={{width: temperature, height: '5vh', minHeight: 20, backgroundColor: lightColor, float: (currentTemperature>0) ? 'left' : 'right'}} />
-          <div style={{display: 'inline-block', fontSize: 20, float: (currentTemperature>0) ? 'left' : 'right', paddingLeft: 5, paddingRight: 5, color: darkColor}}>
-            {currentTemperatureFarenheit}
-          </div> 
-        </div>)
-    } else {
-      bar = (<div style={{display: 'inline-block'}}>{positiveOrNegativeSign}{currentTemperature} °F</div>);
-    }
-    var temperatureBar = 
-      <div style={{width: '100%', height: '5vh', minHeight: 20, position: 'absolute', bottom: 0}}>
-        <div style={{position: 'absolute', left: '48%', bottom: 'calc(20px + 2vh)', lineHeight: '25px', fontSize: 20, color: darkColor}}>-</div>
-        {bar}
-        <div style={{position: 'absolute', left: '52%', bottom: 'calc(20px + 2vh)', lineHeight: '25px', fontSize: 20, color: darkColor}}>+</div>
-      </div>;
-
-    //build the button style - cursor and color  
-    var buttonCursor = (this.state.latitude === 'Please enter a valid latitude' || this.state.longitude === 'Please enter a valid longitude') ? 'not-allowed' : 'pointer';
-    var buttonColor = (this.state.mouseHoveredActiveButton === true) ? lightColor : 'white';
+    var latitudeLongitudeInputs = <LatitudeLongitudeInputs lightColor={lightColor} darkColor={darkColor} latitude={this.state.latitude} longitude={this.state.longitude} changeLatitude={this.changeLatitude} changeLongitude={this.changeLongitude} />;
+    var getWeatherButton = <WeatherButton latitude={this.state.latitude} longitude={this.state.longitude} lightColor={lightColor} darkColor={darkColor} getWeather={this.getWeather} />
+    var thermometer = <Thermometer currentTemperature={currentTemperature} lightColor={lightColor} darkColor={darkColor} />;
 
     return (
       <div className='App'>
         <div className='App-header'>
-          <span>
-            <input id='latitude-input' style={{outline: 'none', width: 130, border: '1px solid ' + lightColor, borderRadius: '4px', height: '30px', paddingLeft: 10, paddingRight: 10}} type='number' min='-90' max='90' onChange={this._changeLatitude} />
-            <div style={{color: darkColor, fontSize: 18}}>{this.state.latitude}</div>
-          </span>
-          <span>
-            <input id='longitude-input' style={{outline: 'none', width: 130, border: '1px solid ' + lightColor, borderRadius: '4px', height: '30px', paddingLeft: 10, paddingRight: 10}} type='number' min='-180' max='180' onChange={this._changeLongitude} />
-            <div style={{color: darkColor, fontSize: 18}}>{this.state.longitude}</div>
-          </span>
-          <button id='get-weather-button' style={{cursor: buttonCursor, backgroundColor: buttonColor, outline: 'none', border: '2px solid ' + darkColor, color: darkColor, borderRadius: '4px', height: '38px', paddingLeft: 10, paddingRight: 10, fontSize: '20px', width: 150, marginTop: 17}} onClick={this._getWeather} onMouseEnter={this._mouseEnterButton} onMouseLeave={this._mouseLeaveButton} onMouseUp={this._mouseLeaveButton} onMouseDown={this._mouseEnterButton}>
-            Get Weather
-          </button>
+          {latitudeLongitudeInputs}
+          {getWeatherButton}
         </div>
         <div className='App-intro'>
           {weatherIcon}
         </div>
         <div style={{position: 'absolute', left: '50%', bottom: 0, width: 2, height: '10vh', minHeight: 40,backgroundColor: darkColor}} />
-        {temperatureBar}
+        {thermometer}
       </div>
     );
   }
