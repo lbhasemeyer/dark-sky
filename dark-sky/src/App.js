@@ -97,6 +97,8 @@ class App extends Component {
     switch(currentWeather) {
       case 'clear-day':
         iconSrc = ClearDay;
+        var lightColor = "orange";
+        var darkColor = "red";
         spin = true;
         break;
       case 'clear-night':
