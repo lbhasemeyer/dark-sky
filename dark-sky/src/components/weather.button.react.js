@@ -19,6 +19,7 @@ class WeatherButton extends Component {
   _mouseLeaveButton(){
     this.setState({mouseHoveredActiveButton: false});
   }
+  //call getWeather in App.js when button is clicked
   _getWeather(){
     this.props.getWeather();
   }

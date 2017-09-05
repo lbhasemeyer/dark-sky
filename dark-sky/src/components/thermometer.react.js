@@ -11,7 +11,7 @@ class Thermometer extends Component {
     //calculate temperature output
     var positiveOrNegativeSign = (currentTemperature >= 0) ? '+' : '-';
     var currentTemperatureFarenheit = (currentTemperature !== null) ? currentTemperature + '°F' : '';
-    //build the bar - going right for positive temperatures and left for negative temperatures. 
+    //build the thermometer bar - going right for positive temperatures and left for negative temperatures. 
     var bar;
     if(currentTemperature!==0){
       bar = 

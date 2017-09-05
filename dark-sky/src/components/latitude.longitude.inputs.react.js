@@ -7,10 +7,12 @@ class WeatherButton extends Component {
     this._changeLatitude = this._changeLatitude.bind(this);
     this._changeLongitude = this._changeLongitude.bind(this);
   }
+  //validate the new latitude and pass to App.js to change state
   _changeLatitude(event){
     var newValue = (event.target.value === '' || event.target.value < -90 || event.target.value > 90) ? 'Please enter a valid latitude' : parseInt(event.target.value, 10);
     this.props.changeLatitude(newValue);
   }
+  //validate the new longitude and pass to App.js to change state  
   _changeLongitude(event){
     var newValue = (event.target.value === '' || event.target.value < -180 || event.target.value > 180 ) ? 'Please enter a valid longitude' : parseInt(event.target.value, 10);
     this.props.changeLongitude(newValue);

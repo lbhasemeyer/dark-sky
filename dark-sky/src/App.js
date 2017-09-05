@@ -11,6 +11,7 @@ import CloudyDay from './icons/cloudyDay.svg';
 import './App.css';
 import Thermometer from './components/thermometer.react.js';
 import WeatherButton from './components/weather.button.react.js';
+import WeatherIcon from './components/weather.icon.react.js';
 import LatitudeLongitudeInputs from './components/latitude.longitude.inputs.react.js';
 var jQuery = require('jquery');
 
@@ -157,20 +158,11 @@ class App extends Component {
         darkColor = 'white';
         iconSrc = null;
     }
-    //if no icons were added to the dropArray, we want one big icon to show.  adding spin and slide action classes.
-    var weatherIcon;
-    if(dropArray.length>0){
-      weatherIcon = dropArray;
-    } else {
-      var classForIcon = (spin === true) ? 'big-icon spinning-icon' : 'big-icon';
-      if(slideOut === true){
-        classForIcon += ' sliding-icon';
-      }
-      weatherIcon = <img src={iconSrc} className={classForIcon} alt='' />;
-    }
 
+    //bring in sub-components
     var latitudeLongitudeInputs = <LatitudeLongitudeInputs lightColor={lightColor} darkColor={darkColor} latitude={this.state.latitude} longitude={this.state.longitude} changeLatitude={this.changeLatitude} changeLongitude={this.changeLongitude} />;
     var getWeatherButton = <WeatherButton latitude={this.state.latitude} longitude={this.state.longitude} lightColor={lightColor} darkColor={darkColor} getWeather={this.getWeather} />
+    var weatherIcon = <WeatherIcon iconSrc={iconSrc} dropArray={dropArray} spin={spin} slideOut={slideOut} />;    
     var thermometer = <Thermometer currentTemperature={currentTemperature} lightColor={lightColor} darkColor={darkColor} />;
 
     return (
