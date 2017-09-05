@@ -9,11 +9,13 @@ class WeatherButton extends Component {
     this._mouseLeaveButton = this._mouseLeaveButton.bind(this);
     this._getWeather = this._getWeather.bind(this);
   }
+  //change button background color on hover / mouse down
   _mouseEnterButton(){
     if(this.props.latitude !== 'Please enter a valid latitude' && this.props.longitude !== 'Please enter a valid longitude'){
       this.setState({mouseHoveredActiveButton: true});
     }
   }
+  //change button background color back to white on hover leave / mouse up
   _mouseLeaveButton(){
     this.setState({mouseHoveredActiveButton: false});
   }
@@ -22,7 +24,7 @@ class WeatherButton extends Component {
   }
   render() {
     var darkColor = this.props.darkColor;
-    //build the button style - cursor and color on hover, click, etc.
+    //build the Get Weather button cursor and color
     var buttonCursor = (this.props.latitude === 'Please enter a valid latitude' || this.props.longitude === 'Please enter a valid longitude') ? 'not-allowed' : 'pointer';
     var buttonColor = (this.state.mouseHoveredActiveButton === true) ? this.props.lightColor : 'white';
 

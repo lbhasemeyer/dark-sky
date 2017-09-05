@@ -40,6 +40,11 @@
 	0% {top:-300px;}
 	100% {top:1500px;}
 }
+.falling0 {
+	margin-left: 90vw;
+	animation-delay:1s;
+	-webkit-animation-delay:1s;
+}
 .falling1 {
 	margin-left: 25vw;	
 	animation-delay:1s;
@@ -59,11 +64,6 @@
 	margin-left: 120vw;
 	animation-delay:3s;
 	-webkit-animation-delay:3s;
-}
-.falling5 {
-	margin-left: 90vw;
-	animation-delay:4s;
-	-webkit-animation-delay:4s;
 }
 
 /*sliding icons*/

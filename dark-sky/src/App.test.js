@@ -1,28 +1,17 @@
-import React from 'react';import App from './App';
+import React from 'react';
+import App from './App';
+import Inputs from './components/latitude.longitude.inputs.react.js';
 import { mount, shallow } from 'enzyme';
 
 //uses Jest
 it('renders without crashing', () => {
-	expect(shallow(<App />).contains('Get Weather')).toBe(true);
+	expect(shallow(<App />));
 });
 
 it('has correct props on initial render', () => {
-	var component = shallow(<App />);
-	expect(shallow(<App />).contains('Get Weather')).toBe(true);
-	expect(component.state('latitude')).toEqual(40.016457);
-	expect(component.state('longitude')).toEqual(-105.285884);
-	expect(component.state('currentWeather')).toEqual(null);
-	expect(component.state('temperature')).toEqual(null);
-});
-
-it('reacts to input changes', () => {
-	var component = shallow(<App />);
-	component.find('input#latitude-input').simulate('change', { target: {
-		value: '9' }
-	});
-	component.find('input#longitude-input').simulate('change', { target: {
-		value: '90' }
-	});	
-	expect(component.state('latitude')).toEqual(9);
-	expect(component.state('longitude')).toEqual(90);
+	var appComponent = shallow(<App />);
+	expect(appComponent.state('latitude')).toEqual(40.016457);
+	expect(appComponent.state('longitude')).toEqual(-105.285884);
+	expect(appComponent.state('currentWeather')).toEqual(null);
+	expect(appComponent.state('temperature')).toEqual(null);
 });

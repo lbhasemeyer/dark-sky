@@ -8,10 +8,11 @@ class Thermometer extends Component {
     var lightColor = this.props.lightColor;
     //set width of temperature bar based on |temperature|.  multiplying by .6 so temperatures up to 140F will comfortably fit on the fullscreen.
     var temperature = Math.abs(currentTemperature)*.6 + '%';
-    //build the bar - going right for positive temperatures and left for negative temperatures.
-    var bar;
+    //calculate temperature output
     var positiveOrNegativeSign = (currentTemperature >= 0) ? '+' : '-';
     var currentTemperatureFarenheit = (currentTemperature !== null) ? currentTemperature + '°F' : '';
+    //build the bar - going right for positive temperatures and left for negative temperatures. 
+    var bar;
     if(currentTemperature!==0){
       bar = 
         (<div style={{width: '50%', float: (currentTemperature>0) ? 'right' : 'left'}}>
