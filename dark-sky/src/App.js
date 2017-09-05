@@ -15,33 +15,33 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {latitude: 40.016457, longitude: -105.285884, currentWeather: null, temperature: null};
-    this.getWeather = this.getWeather.bind(this);
-    this.changeLatitude = this.changeLatitude.bind(this);
-    this.changeLongitude = this.changeLongitude.bind(this);
-    this.noscroll = this.noscroll.bind(this);
-    this.enter = this.enter.bind(this);
+    this._getWeather = this._getWeather.bind(this);
+    this._changeLatitude = this._changeLatitude.bind(this);
+    this._changeLongitude = this._changeLongitude.bind(this);
+    this._preventScroll = this._preventScroll.bind(this);
+    this._enterKeyHit = this._enterKeyHit.bind(this);
   }
-  //when component mounts, getWeather for the default location (40.016457, -105.285884)
-  //also prevent scroll actions and listen for the enter keypress, which will run getWeather
+  //when component mounts, _getWeather for the default location (40.016457, -105.285884)
+  //also prevent scroll actions and listen for the enter keypress, which will run _getWeather
   componentDidMount() {
-    this.getWeather();
-    document.addEventListener('scroll', this.noscroll);
-    document.addEventListener('keypress', this.enter);    
+    this._getWeather();
+    document.addEventListener('scroll', this._preventScroll);
+    document.addEventListener('keypress', this._enterKeyHit);    
   }
   componentWillUnmount() {
-    document.removeEventListener('scroll', this.noscroll);
-    document.removeEventListener('keypress', this.enter);
+    document.removeEventListener('scroll', this._preventScroll);
+    document.removeEventListener('keypress', this._enterKeyHit);
   }
-  noscroll() {
+  _preventScroll() {
     window.scrollTo( 0, 0 );
   }
-  enter(target){
+  _enterKeyHit(target){
     if (target.charCode === 13) {
-      this.getWeather();
+      this._getWeather();
     }  
   }
   //this uses jsonp to hit the dark sky API and clear inputs.
-  getWeather(){
+  _getWeather(){
     var latitude = this.state.latitude;
     var longitude = this.state.longitude;
     if(latitude !== 'Please enter a valid latitude' && longitude !== 'Please enter a valid longitude'){
@@ -66,12 +66,12 @@ class App extends Component {
     }
   }
   //when the latitude input changes, update latitude state.
-  changeLatitude(event){
+  _changeLatitude(event){
     var newValue = (event.target.value === '' || event.target.value < -90 || event.target.value > 90) ? 'Please enter a valid latitude' : parseInt(event.target.value, 10);
     this.setState({latitude: newValue});
   }
   //when the longitude input changes, update latitude state.
-  changeLongitude(event){
+  _changeLongitude(event){
     var newValue = (event.target.value === '' || event.target.value < -180 || event.target.value > 180 ) ? 'Please enter a valid longitude' : parseInt(event.target.value, 10);
     this.setState({longitude: newValue});
   }
@@ -166,7 +166,7 @@ class App extends Component {
       weatherIcon = <img src={iconSrc} className={classForIcon} />;
     }
 
-    //set width of temperature bar based on |temperature|
+    //set width of temperature bar based on |temperature|.  multiplying by .6 so temperatures up to 140F will comfortably fit on the fullscreen.
     var temperature = Math.abs(currentTemperature)*.6 + '%';
     //build the bar - going right for positive temperatures and left for negative temperatures.
     var bar;
@@ -193,14 +193,14 @@ class App extends Component {
       <div className="App">
         <div className="App-header">
           <span>
-            <input id="latitude-input" style={{outline: 'none', width: 130, border: '1px solid ' + lightColor, borderRadius: '4px', height: '30px', paddingLeft: 10, paddingRight: 10}} type="number" min="-90" max="90" onChange={this.changeLatitude} />
+            <input id="latitude-input" style={{outline: 'none', width: 130, border: '1px solid ' + lightColor, borderRadius: '4px', height: '30px', paddingLeft: 10, paddingRight: 10}} type="number" min="-90" max="90" onChange={this._changeLatitude} />
             <div style={{color: darkColor, fontSize: 18}}>{this.state.latitude}</div>
           </span>
           <span>
-            <input id="longitude-input" style={{outline: 'none', width: 130, border: '1px solid ' + lightColor, borderRadius: '4px', height: '30px', paddingLeft: 10, paddingRight: 10}} type="number" min="-180" max="180" onChange={this.changeLongitude} />
+            <input id="longitude-input" style={{outline: 'none', width: 130, border: '1px solid ' + lightColor, borderRadius: '4px', height: '30px', paddingLeft: 10, paddingRight: 10}} type="number" min="-180" max="180" onChange={this._changeLongitude} />
             <div style={{color: darkColor, fontSize: 18}}>{this.state.longitude}</div>
           </span>
-          <button id="get-weather-button" style={{outline: 'none', border: '2px solid ' + darkColor, color: darkColor, borderRadius: '4px', height: '38px', paddingLeft: 10, paddingRight: 10, fontSize: '20px', width: 150, marginTop: 17, backgroundColor: 'white'}} onClick={this.getWeather}>
+          <button id="get-weather-button" style={{outline: 'none', border: '2px solid ' + darkColor, color: darkColor, borderRadius: '4px', height: '38px', paddingLeft: 10, paddingRight: 10, fontSize: '20px', width: 150, marginTop: 17, backgroundColor: 'white'}} onClick={this._getWeather}>
             Get Weather
           </button>
         </div>
