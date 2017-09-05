@@ -171,12 +171,13 @@ class App extends Component {
     //build the bar - going right for positive temperatures and left for negative temperatures.
     var bar;
     var positiveOrNegativeSign = (currentTemperature >= 0) ? '+' : '-';
+    var currentTemperatureFarenheit = (currentTemperature !== null) ? currentTemperature + '°F' : '';
     if(currentTemperature!==0){
       bar = 
         (<div style={{width: '50%', float: (currentTemperature>0) ? 'right' : 'left'}}>
           <div style={{width: temperature, height: 20, backgroundColor: lightColor, float: (currentTemperature>0) ? 'left' : 'right'}} />
           <div style={{display: 'inline-block', fontSize: 20, float: (currentTemperature>0) ? 'left' : 'right', paddingLeft: 5, paddingRight: 5, color: darkColor}}>
-            {currentTemperature} °F
+            {currentTemperatureFarenheit}
           </div> 
         </div>)
     } else {
