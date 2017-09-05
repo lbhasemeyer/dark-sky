@@ -174,7 +174,7 @@ class App extends Component {
         <div className='App-intro'>
           {weatherIcon}
         </div>
-        <div style={{position: 'absolute', left: '50%', bottom: 0, width: 2, height: '10vh', minHeight: 40,backgroundColor: darkColor}} />
+        <div style={{position: 'absolute', left: '50%', bottom: 0, width: 2, height: 40, backgroundColor: darkColor}} />
         {thermometer}
       </div>
     );

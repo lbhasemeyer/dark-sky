@@ -16,7 +16,7 @@ class Thermometer extends Component {
     if(currentTemperature!==0){
       bar = 
         (<div style={{width: '50%', float: (currentTemperature>0) ? 'right' : 'left'}}>
-          <div style={{width: temperature, height: '5vh', minHeight: 20, backgroundColor: lightColor, float: (currentTemperature>0) ? 'left' : 'right'}} />
+          <div style={{width: temperature, height: 20, backgroundColor: lightColor, float: (currentTemperature>0) ? 'left' : 'right'}} />
           <div style={{display: 'inline-block', fontSize: 20, float: (currentTemperature>0) ? 'left' : 'right', paddingLeft: 5, paddingRight: 5, color: darkColor}}>
             {currentTemperatureFarenheit}
           </div> 
@@ -25,10 +25,10 @@ class Thermometer extends Component {
       bar = (<div style={{display: 'inline-block'}}>{positiveOrNegativeSign}{currentTemperature} °F</div>);
     }
     var temperatureBar = 
-      <div style={{width: '100%', height: '5vh', minHeight: 20, position: 'absolute', bottom: 0}}>
-        <div style={{position: 'absolute', left: '48%', bottom: 'calc(20px + 2vh)', lineHeight: '25px', fontSize: 20, color: darkColor}}>-</div>
+      <div style={{width: '100%', height: 20, position: 'absolute', bottom: 0}}>
+        <div style={{position: 'absolute', left: '48%', bottom: 20, lineHeight: '25px', fontSize: 20, color: darkColor}}>-</div>
         {bar}
-        <div style={{position: 'absolute', left: '52%', bottom: 'calc(20px + 2vh)', lineHeight: '25px', fontSize: 20, color: darkColor}}>+</div>
+        <div style={{position: 'absolute', left: '52%', bottom: 20, lineHeight: '25px', fontSize: 20, color: darkColor}}>+</div>
       </div>;
 
     return (
